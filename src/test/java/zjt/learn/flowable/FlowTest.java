@@ -61,8 +61,9 @@ public class FlowTest extends FlowableCoreApplicationTests{
      */
     @Test
     public void completeTask(){
-        ProcessEngine processEngine = ProcessEngines.getDefaultProcessEngine();
-        TaskService taskService = processEngine.getTaskService();
+        ProcessEngine processEngine = ProcessEngines.getDefaultProcessEngine();//springboot项目中可以注入
+        TaskService taskService = processEngine.getTaskService();//获取任务服务
+        //此处查询任务id
         Task task = taskService.createTaskQuery()
                 .processDefinitionKey(PROCESS_INSTANCE_KEY)
                 .taskAssignee("财务主管")
@@ -72,12 +73,13 @@ public class FlowTest extends FlowableCoreApplicationTests{
         Map<String, Object> processVariables = task.getProcessVariables();
         processVariables.put("remark","dddaaaaccccdddddeeee2");
         processVariables.put("result","true");
+        //复杂表单可以封装到json中
         BasicLoanDelayApproveFormDTO formDTO = BasicLoanDelayApproveFormDTO.builder()
                 .amount(BigDecimal.valueOf(20000.11))
                 .delayEndAt("2022-07-30")
                 .build();
         processVariables.put("formJson", JSON.toJSONString(formDTO));
-
+        //完成任务
         taskService.complete(task.getId(),processVariables);
     }
 
