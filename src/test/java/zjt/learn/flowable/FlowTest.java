@@ -90,7 +90,6 @@ public class FlowTest extends FlowableCoreApplicationTests{
      */
     @Test
     public void queryTasks(){
-        TaskService taskService = processEngine.getTaskService();//获取任务服务
         //此处查询任务id
         Task task = taskService.createTaskQuery()
                 .processDefinitionKey(PROCESS_INSTANCE_KEY)
@@ -113,7 +112,20 @@ public class FlowTest extends FlowableCoreApplicationTests{
 
     }
 
-
+    /**
+     * 停止流程实例
+     */
+    @Test
+    public void deleteInstance(){
+        //此处查询任务id
+        Task task = taskService.createTaskQuery()
+                .processDefinitionKey(PROCESS_INSTANCE_KEY)
+                .taskAssignee("财务主管")
+                .orderByTaskCreateTime().desc()
+                .list().get(0);
+        String processInstanceId = task.getProcessInstanceId();
+        runtimeService.deleteProcessInstance(processInstanceId,"手动停止");
+    }
 
 
 
@@ -123,7 +135,6 @@ public class FlowTest extends FlowableCoreApplicationTests{
      */
     @Test
     public void completeTask(){
-        TaskService taskService = processEngine.getTaskService();//获取任务服务
         //此处查询任务id
         Task task = taskService.createTaskQuery()
                 .processDefinitionKey(PROCESS_INSTANCE_KEY)
